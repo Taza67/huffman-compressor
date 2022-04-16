@@ -1,0 +1,7 @@
+# Fichiers objets et executables
+*.o
+obj/
+huffman-compressor
+
+# Fichiers temporaires
+*~
