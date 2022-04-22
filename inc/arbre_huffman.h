@@ -15,4 +15,19 @@ typedef struct struct_noeud {
    et les mets dans le tableau tab */
 void occurence(char *nom_fichier, int tab[256]);
 
+/* Calcule la taille du fichier, nombre de caractères */
+int total_occurence_fichier(char *nom_fichier);
+
+/* Crée et renvoie une feuille */
+noeud * creer_feuille(int* tab, int index);
+
+/* Crée les noeuds de l'arbre */
+void creer_tous_noeuds(noeud *arbre_huffman[], int occurence[256], int *nbr_char, int *taille_fichier);
+
+/* Recherche les deux noeuds avec les plus petites occurences */
+int chercher2petits(noeud * arbre_huffman[], int * first, int * second);
+
+/* Crée l'arbre de huffman */
+void creer_noeud(noeud * arbre_huffman[], int taille);
+
 #endif
