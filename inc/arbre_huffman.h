@@ -30,4 +30,19 @@ int chercher2petits(noeud * arbre_huffman[], int * first, int * second);
 /* Crée l'arbre de huffman */
 void creer_noeud(noeud * arbre_huffman[], int taille);
 
+/* Crée les codes binaires des feuilles de l'arbre */
+void creer_code(noeud* element, int code, int profondeur, noeud* alphabet[256]);
+
+/* Affiche le code des noeuds en binaire */
+void affichage_code(int nbr_bits, int codage);
+
+/* Calcule la profondeur de l'arbre */
+int calculer_profondeur_arbre(noeud* a);
+
+/* Fonction auxiliaire de afficher_arbre */
+void afficher_arbre_aux(noeud *a, int prof);
+
+/* Fonction qui affiche l'arbre sur le terminal */
+void afficher_arbre(noeud *a );
+
 #endif

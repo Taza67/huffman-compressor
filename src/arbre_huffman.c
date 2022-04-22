@@ -85,3 +85,63 @@ void creer_noeud(noeud * arbre_huffman[], int taille) {
     if (taille > 1) 
         *arbre_huffman = arbre_huffman[first];
 }
+
+void creer_code(noeud* element, int code, int profondeur, noeud* alphabet[256]) {
+    if (element == NULL) return;
+    if (element->droit == NULL && element->gauche == NULL) {
+        element->bits = profondeur;
+        element->code = code;
+        alphabet[(int)element->initial] = element;
+    } else {
+        profondeur++;
+        if (element->droit != NULL) {
+            int new_code = (code << 1) + 1;
+            creer_code(element->droit, new_code, profondeur, alphabet);
+        }
+        if (element->gauche != NULL) {
+            int new_code = (code << 1);
+            creer_code(element->gauche, new_code, profondeur, alphabet);
+        }
+    }
+}
+
+void affichage_code(int nbr_bits, int codage) {
+    int * binaire = (int*)allocation_mem_init0(nbr_bits, sizeof(int));
+    int i, *p;
+    for (p = binaire; codage > 0; p++) {
+        *p = codage % 2;
+        codage = codage / 2;
+    }
+    for (i = nbr_bits - 1; i >= 0; i--) printf("%d", binaire[i]);
+    printf("\n");
+    free(binaire);
+}
+
+int calculer_profondeur_arbre(noeud* a) {
+    int hauteur_max = 1;
+    if (a == NULL) return 0;
+    if (a->gauche != NULL) {
+        int tmp = 1;
+        tmp += calculer_profondeur_arbre(a->gauche);
+        if (tmp > hauteur_max) hauteur_max = tmp;
+    }
+    if (a->droit != NULL) {
+        int tmp = 1;
+        tmp += calculer_profondeur_arbre(a->droit);
+        if (tmp > hauteur_max) hauteur_max = tmp;
+    }
+    return hauteur_max;
+}
+
+void afficher_arbre_aux(noeud *a, int prof) {
+    int i;
+    for (i = 0; i < prof; printf("|"), i++ );
+    printf( "%c -> ", a->initial);
+    affichage_code(a->bits, a->code);
+    if (a->gauche != NULL) afficher_arbre_aux(a->gauche, prof + 1);
+    if (a->droit != NULL) afficher_arbre_aux( a->droit, prof + 1);
+}
+
+void afficher_arbre(noeud *a ) {
+    afficher_arbre_aux(a, 0);
+}
