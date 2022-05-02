@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "allocation.h"
 #include "arbre_huffman.h"
+#include "gestion_fichiers.h"
 #include "en_tete.h"
 
 void ecrire_entete_aux(FILE* archive, noeud* alphabet[256]) {
@@ -27,4 +30,30 @@ void recuperer_entete(FILE* archive, int occurence[256]) {
                 fprintf(stderr, "- Erreur recuperer_entete(FILE* archive, int occurence[256]) : recupération de l'occurence échouée !\n");
         }
     } while (caractere != '\0' && caractere != EOF);
+}
+
+void ecrire_entete(file* liste_fichiers, FILE* archive, int nombre_fichiers, noeud* alphabet[256]) {
+    int tab_occurence[256],
+        nbr_char = 0,
+        taille_fichier = 0,
+        i = 0;
+    noeud* arbre_huffman[256];
+    for(i = 0;i < 256; i++) {
+        alphabet[i] = NULL;
+        tab_occurence[i] = 0;
+        arbre_huffman[i] = NULL;
+    }
+    calculer_occurences_totales(liste_fichiers, nombre_fichiers, tab_occurence);
+    creer_tous_noeuds(arbre_huffman, tab_occurence, &nbr_char, &taille_fichier);
+    creer_noeud(arbre_huffman, nbr_char);
+    creer_code(*arbre_huffman, 0, 0, alphabet);
+    ecrire_entete_aux(archive, alphabet);  
+}
+
+void calculer_occurences_totales(file* liste_fichiers, int nombre_fichiers, int tab_occurence[256]) {
+    int i = 0;
+    for (i = 0; i < nombre_fichiers; i++) {
+        if (liste_fichiers[i].type == 'f')
+            occurence(liste_fichiers[i].nom, tab_occurence);
+    }
 }
