@@ -56,3 +56,21 @@ char * renvoyer_nom_modifie(char * nom, char type) {
     }
     return new_name;
 }
+
+file * lister_fichiers(int taille_ligne, char ** ligne_arguments)  {
+    int taille_liste_fichiers = taille_ligne - 3, i = 0;
+    file * liste_fichiers = (file*)allocation_mem_init0(taille_liste_fichiers, sizeof(file));
+    for (i = 3; i < taille_ligne; i++) {
+        char type = 0;
+        liste_fichiers[i - 3].nom = (char*)allocation_mem_init0(strlen(ligne_arguments[i]), sizeof(char));
+        strcpy(liste_fichiers[i - 3].nom, ligne_arguments[i]);
+        type = renvoyer_type(liste_fichiers[i - 3].nom);
+        if (type != 'f' && type != 'd') {
+            fprintf(stderr, "- Erreur fonction lister_fichiers(int taille_ligne, char ** ligne_arguments) : le fichier %s n'est ni un fichier, ni un dossier !\n", liste_fichiers[i - 3].nom);
+            exit(EXIT_FAILURE);
+        }
+        liste_fichiers[i - 3].type = type;
+        liste_fichiers[i - 3].taille = 0;
+    }
+    return liste_fichiers;
+}
