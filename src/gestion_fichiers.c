@@ -74,3 +74,50 @@ file * lister_fichiers(int taille_ligne, char ** ligne_arguments)  {
     }
     return liste_fichiers;
 }
+
+file * lister_fichiers_dossier(char * nom_dossier)  {
+    DIR* rep = NULL;
+    struct dirent* fichier = NULL;
+    file * liste_fichiers = NULL;
+    int nombre_fichiers = 0,
+        i = 0;
+    if ((rep = opendir(nom_dossier)) == NULL) {
+        fprintf(stderr, "- Erreur -> fonction lister_fichiers_dossier(char * nom_dossier) : ouverture du dossier %s impossible !\n", nom_dossier);
+        exit(EXIT_FAILURE);
+    }
+    while ((fichier = readdir(rep)) != NULL) {
+        if (strcmp(fichier->d_name, ".") != 0 && strcmp(fichier->d_name, "..") != 0) {
+            nombre_fichiers++;
+        }
+    }
+    rewinddir(rep);
+    liste_fichiers = (file*)allocation_mem_init0(nombre_fichiers, sizeof(file));
+    while ((fichier = readdir(rep)) != NULL) {
+        if (strcmp(fichier->d_name, ".") != 0 && strcmp(fichier->d_name, "..") != 0) {
+            liste_fichiers[i].nom = (char*)allocation_mem_init0(strlen(fichier->d_name) + 1, sizeof(char));
+            strcpy(liste_fichiers[i].nom, fichier->d_name);
+            liste_fichiers[i].type = renvoyer_type(liste_fichiers[i].nom);
+            liste_fichiers[i].taille = 0;
+            i++;
+        }
+    }
+    closedir(rep);
+    return liste_fichiers;
+}
+
+int renvoyer_nombre_fichiers_dossier(char * nom_dossier) {
+    DIR* rep = NULL;
+    struct dirent* fichier = NULL;
+    int nombre_fichiers = 0;
+    if ((rep = opendir(nom_dossier)) == NULL) {
+        fprintf(stderr, "- Erreur -> fonction renvoyer_nombre_fichiers_dossier(char * nom_dossier) : ouverture du dossier %s impossible !\n", nom_dossier);
+        exit(EXIT_FAILURE);
+    }
+    while ((fichier = readdir(rep)) != NULL) {
+        if (strcmp(fichier->d_name, ".") != 0 && strcmp(fichier->d_name, "..") != 0) {
+            nombre_fichiers++;
+        }
+    }
+    closedir(rep);
+    return nombre_fichiers;
+}

@@ -27,4 +27,10 @@ file * lister_fichiers(int taille_ligne, char ** ligne_arguments);
 /* Modifie le nom d'un fichier si le dernier est déjà attribué */
 char * renvoyer_nom_modifie(char * nom, char type);
 
+/* Liste tous les fichiers contenus dans le dossier donné */
+file * lister_fichiers_dossier(char * nom_dossier);
+
+/* Renvoie le nombre de fichiers contenus dans le dossier donné */
+int renvoyer_nombre_fichiers_dossier(char * nom_dossier);
+
 #endif
