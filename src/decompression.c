@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include "allocation.h"
 #include "gestion_fichiers.h"
 #include "en_tete.h"
@@ -42,14 +43,38 @@ noeud * recuperer_feuille(noeud *racine, int paquet, int taille_paquet, int prof
     return NULL;
 }
 
-void decompression_fichier(char * nom_archive, char *dossier_cible) {
-    FILE *fichier = NULL, *archive = NULL;
-    int taille_nom = 10 , j = 0;
-    char *nom_fichier = (char*)allocation_mem_init0(10, sizeof(char)), caractere, *name = NULL;
-    int occurence[256],
+void decompression_fichier(FILE *archive, char * nom_fichier, noeud* arbre_huffman[256]) {
+    FILE *fichier = NULL;
+    int taille_fichier = 0;
+    char * name = NULL;
+    name = renvoyer_nom_modifie(nom_fichier, 'f');
+    if ((fichier = fopen(name, "w")) == NULL) {
+        fprintf(stderr, "- Erreur -> fonction decompression_fichier(FILE *archive, char *nom_fichier) : ouverture du fichier %s impossible !\n", name);
+        exit(EXIT_FAILURE);
+    }
+    if (archive == NULL) {
+        fprintf(stderr, "- Erreur -> fonction decompression_fichier(FILE *archive, char *nom_fichier) : archive = NULL !\n");
+        exit(EXIT_FAILURE);
+    }
+    if (fread(&(taille_fichier), sizeof(int), 1, archive) != 1) {
+        fprintf(stderr, "- Erreur -> fonction decompression_fichier(FILE *archive, char * nom_fichier, noeud* arbre_huffman[256]) : récupération du nombre de fichiers échouée !\n");
+        exit(EXIT_FAILURE);
+    }
+    if (fgetc(archive) != '\0') {
+        fprintf(stderr, "- Erreur -> fonction decompression_fichier(FILE *archive, char * nom_fichier, noeud* arbre_huffman[256]) : séparateur non trouvé, fichier erroné !\n");
+        exit(EXIT_FAILURE);
+    }
+    recuperer_contenu(archive, fichier, arbre_huffman, taille_fichier);
+    fclose(fichier);
+}
+
+void decompression(char *nom_archive, char *dossier_cible) {
+    FILE *archive = NULL;
+    int nombre_fichiers = 0,
+        type = 0, sep = 0, caractere = 0, i = 0,
+        occurence[256],
         nbr_char = 0,
-        taille_fichier = 0,
-        i = 0;
+        taille_fichier = 0;
     noeud *alphabet[256],
         *arbre_huffman[256];
     for (i = 0; i < 256; i++) {
@@ -58,30 +83,39 @@ void decompression_fichier(char * nom_archive, char *dossier_cible) {
         arbre_huffman[i] = NULL;
     }
     if ((archive = fopen(nom_archive, "rb")) == NULL) {
-        fprintf(stderr, "- Erreur -> fonction decompression_fichier(char* nom_archive, char* nom_fichier) : ouverture de l'archive %s impossible !\n", nom_archive);
-        exit(EXIT_FAILURE);
-    }
-    for (j = 0; (caractere = fgetc(archive)) != '\0' && caractere != EOF; j++) {
-        if (j + 1 > taille_nom) {
-            taille_nom += 10;
-            nom_fichier = (char *)reallocation_mem(nom_fichier, taille_nom, sizeof(char));
-        }
-        nom_fichier[j] = caractere;
-    }
-    nom_fichier[j] = '\0';
-    nom_fichier = creer_chemin_fichier(dossier_cible, nom_fichier);
-    name = renvoyer_nom_modifie(nom_fichier, 'f');
-    if ((fichier = fopen(name, "w")) == NULL) {
-        fprintf(stderr, "- Erreur -> fonction decompression_fichier(char* nom_archive, char* nom_fichier) : ouverture du fichier %s impossible !\n", nom_fichier);
+        fprintf(stderr, "- Erreur -> fonction decompression(char *nom_archive) : ouverture de l'archive %s impossible !\n", nom_archive);
         exit(EXIT_FAILURE);
     }
     recuperer_entete(archive, occurence);
     creer_tous_noeuds(arbre_huffman, occurence, &nbr_char, &taille_fichier);
     creer_noeud(arbre_huffman, nbr_char);
     creer_code(*arbre_huffman, 0, 0, alphabet);
-    recuperer_contenu(archive, fichier, arbre_huffman, taille_fichier);
+    if (fread(&(nombre_fichiers), sizeof(int), 1, archive) != 1) {
+        fprintf(stderr, "- Erreur -> fonction decompression(char *nom_archive) : récupération du nombre de fichiers échouée !\n");
+        exit(EXIT_FAILURE);
+    }
+    for (i = 0; i < nombre_fichiers; i++) {
+        int taille_nom = 10 , j = 0;
+        char *nom_fichier = (char*)allocation_mem_init0(10, sizeof(char));
+        if (((type = fgetc(archive)) != 'f' && type != 'd') || type == EOF || (sep = fgetc(archive)) != '\0') {
+            fprintf(stderr, "- Erreur -> fonction decompression(char *nom_archive) : récupération du type échouée à l'indice %d !\n", i);
+            exit(EXIT_FAILURE);
+        }
+        for (j = 0; (caractere = fgetc(archive)) != '\0' && caractere != EOF; j++) {
+            if (j + 1 > taille_nom) {
+                taille_nom += 10;
+                nom_fichier = (char *)reallocation_mem(nom_fichier, taille_nom, sizeof(char));
+            }
+            nom_fichier[j] = caractere;
+        }
+        nom_fichier[j] = '\0';
+        nom_fichier = creer_chemin_fichier(dossier_cible, nom_fichier);
+        if (type == 'f') {
+            decompression_fichier(archive, nom_fichier, arbre_huffman);
+        }
+        libere(nom_fichier);
+    }
     for (i = 0; i < 256; i++)
         if (alphabet[i] != NULL) libere(alphabet[i]);
-    fclose(fichier);
     fclose(archive);
 }

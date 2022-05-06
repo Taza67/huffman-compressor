@@ -19,7 +19,7 @@ int main(int argc, char ** argv) {
         break;
     case 'd':
         dossier_cible = (argc == 4) ? argv[3] : ".";
-        decompression_fichier(argv[2], dossier_cible);
+        decompression(argv[2], dossier_cible);
         break;
     case 'h':
         usage(argv[0]);

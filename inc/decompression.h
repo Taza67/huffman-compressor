@@ -9,7 +9,10 @@ void recuperer_contenu(FILE* archive, FILE* fichier, noeud* arbre_huffman[], int
 /* Renvoie une feuille dès qu'un code correspond au sien */
 noeud * recuperer_feuille(noeud *racine, int paquet, int taille_paquet, int profondeur);
 
-/* Décompresse un fichier dans un dossier cible qui est par défaut le dossier local */
-void decompression_fichier(char * nom_archive, char *dossier_cible);
+/* Décompresse un fichier à partir d'une archive */
+void decompression_fichier(FILE *archive, char * nom_fichier, noeud* arbre_huffman[256]);
+
+/* Décompresse une archive qui contient une liste de fichiers */
+void decompression(char *nom_archive, char *dossier_cible);
 
 #endif
