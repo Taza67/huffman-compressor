@@ -14,6 +14,11 @@ int main(int argc, char ** argv) {
     }
     switch (argv[1][1]) {
     case 'c':
+        if (argc < 4) {
+            fprintf(stderr, "- Erreur -> fonction main : il faut au moins un fichier à compresser !\n");
+            usage(argv[0]);
+            exit(EXIT_FAILURE);
+        }
         liste_fichiers = lister_fichiers(argc, argv);
         compression(liste_fichiers, argc - 3, argv[2]);
         break;
