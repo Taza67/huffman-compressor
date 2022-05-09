@@ -1,6 +1,8 @@
 #ifndef _ARBRE_HUFFMAN_H_
 #define _ARBRE_HUFFMAN_H_
 
+/* ********************Structure huffman****************** */
+
 /* Structure d'un noeud de l'arbre de huffman */
 typedef struct struct_noeud {
     int initial;                /* Caractere */
@@ -33,6 +35,8 @@ void creer_noeud(noeud * arbre_huffman[], int taille);
 /* Crée les codes binaires des feuilles de l'arbre */
 void creer_code(noeud* element, int code, int profondeur, noeud* alphabet[256]);
 
+/* ********************Affichage************************** */
+
 /* Affiche le code des noeuds en binaire */
 void affichage_code(int nbr_bits, int codage);
 
@@ -44,5 +48,7 @@ void afficher_arbre_aux(noeud *a, int prof);
 
 /* Fonction qui affiche l'arbre sur le terminal */
 void afficher_arbre(noeud *a );
+
+/* ******************************************************* */
 
 #endif
