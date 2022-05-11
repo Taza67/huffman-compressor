@@ -10,6 +10,9 @@ void ecrire_codage(FILE* fichier, FILE* archive, noeud* alphabet[256]);
 /* compresse un fichier dans une archive déjà ouverte */
 void compression_fichier(FILE *archive, file struct_fichier, noeud *alphabet[256]);
 
+/* écrit récursivement une arborescence de fichiers et de dossiers dans l'archive */
+void compression_arborescence(FILE *archive, noeud* alphabet[256], file * liste_fichiers, int nombre_fichiers);
+
 /* compresse une liste de fichiers dans une archive */
 void compression(file * liste_fichiers, int nombre_fichiers, char *nom_archive);
 

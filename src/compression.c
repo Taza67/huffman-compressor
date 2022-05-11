@@ -53,16 +53,8 @@ void compression_fichier(FILE *archive, file struct_fichier, noeud *alphabet[256
 }
 
 /* compresse une liste de fichiers dans une archive */
-void compression(file * liste_fichiers, int nombre_fichiers, char *nom_archive) {
-    FILE *archive = NULL;
-    int i = 0;
-    noeud *alphabet[256];
-    if ((archive = fopen(nom_archive, "wb")) == NULL) {
-        fprintf(stderr, "- Erreur -> fonction compression(file * liste_fichiers, int nombre_fichiers, char * nom_archive) : ouverture de l'archive %s impossible !\n", nom_archive);
-        exit(EXIT_FAILURE);
-    }
-    ecrire_entete(liste_fichiers, archive, nombre_fichiers, alphabet);
-    fwrite(&(nombre_fichiers), sizeof(int), 1, archive);
+void compression_arborescence(FILE *archive, noeud* alphabet[256], file * liste_fichiers, int nombre_fichiers) {
+    int i = 0, j = 0;
     for (i = 0; i < nombre_fichiers; i++) {
         fputc(liste_fichiers[i].type, archive);
         fputc('\0', archive);
@@ -73,8 +65,33 @@ void compression(file * liste_fichiers, int nombre_fichiers, char *nom_archive) 
             fwrite(&(liste_fichiers[i].taille), sizeof(int), 1, archive);
             fputc('\0', archive);
             compression_fichier(archive, liste_fichiers[i], alphabet);
+        } else if (liste_fichiers[i].type == 'd') {
+            int nombre_sous_fichiers = renvoyer_nombre_fichiers_dossier(liste_fichiers[i].nom);
+            file * sous_fichiers = lister_fichiers_dossier(liste_fichiers[i].nom);
+            for (j = 0; j < nombre_sous_fichiers; j++) {
+                char * ancien_nom = sous_fichiers[j].nom;
+                sous_fichiers[j].nom = creer_chemin_fichier(liste_fichiers[i].nom, ancien_nom);
+                libere(ancien_nom);
+            }
+            compression_arborescence(archive, alphabet, sous_fichiers, nombre_sous_fichiers);
+            for (j = 0; j < nombre_sous_fichiers; j++) libere(sous_fichiers[j].nom);
+            libere(sous_fichiers);
         }
     }
+}
+
+/* compresse une liste de fichiers dans une archive */
+void compression(file * liste_fichiers, int nombre_fichiers, char *nom_archive) {
+    FILE *archive = NULL;
+    int i = 0;
+    noeud *alphabet[256];
+    if ((archive = fopen(nom_archive, "wb")) == NULL) {
+        fprintf(stderr, "- Erreur -> fonction compression(file * liste_fichiers, int nombre_fichiers, char * nom_archive) : ouverture de l'archive %s impossible !\n", nom_archive);
+        exit(EXIT_FAILURE);
+    }
+    ecrire_entete(liste_fichiers, archive, nombre_fichiers, alphabet);
+    fwrite(&(nombre_fichiers), sizeof(int), 1, archive);
+    compression_arborescence(archive, alphabet, liste_fichiers, nombre_fichiers);
     for (i = 0; i < 256; i++)
         if (alphabet[i] != NULL) libere(alphabet[i]);
     fclose(archive);
