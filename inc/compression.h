@@ -13,6 +13,9 @@ void compression_fichier(FILE *archive, file struct_fichier, noeud *alphabet[256
 /* écrit récursivement une arborescence de fichiers et de dossiers dans l'archive */
 void compression_arborescence(FILE *archive, noeud* alphabet[256], file * liste_fichiers, int nombre_fichiers);
 
+/* compte le nombre total d'entrées de l'arborescence */
+int compter_arborescence(file * liste_fichiers, int nombre_fichiers);
+
 /* compresse une liste de fichiers dans une archive */
 void compression(file * liste_fichiers, int nombre_fichiers, char *nom_archive);
 
