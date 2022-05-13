@@ -94,10 +94,12 @@ file * lister_fichiers_dossier(char * nom_dossier)  {
     liste_fichiers = (file*)allocation_mem_init0(nombre_fichiers, sizeof(file));
     while ((fichier = readdir(rep)) != NULL) {
         if (strcmp(fichier->d_name, ".") != 0 && strcmp(fichier->d_name, "..") != 0) {
+            char * chemin = creer_chemin_fichier(nom_dossier, fichier->d_name);
             liste_fichiers[i].nom = (char*)allocation_mem_init0(strlen(fichier->d_name) + 1, sizeof(char));
             strcpy(liste_fichiers[i].nom, fichier->d_name);
-            liste_fichiers[i].type = renvoyer_type(liste_fichiers[i].nom);
+            liste_fichiers[i].type = renvoyer_type(chemin);
             liste_fichiers[i].taille = 0;
+            libere(chemin);
             i++;
         }
     }
