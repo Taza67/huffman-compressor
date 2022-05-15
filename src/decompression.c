@@ -68,6 +68,21 @@ void decompression_fichier(FILE *archive, char * nom_fichier, noeud* arbre_huffm
     fclose(fichier);
 }
 
+/* crée récursivement les dossiers parents d'un chemin */
+void creer_dossier_parent(char *chemin) {
+    int i = 0, taille = strlen(chemin);
+    char *copie = (char*)allocation_mem_init0(taille + 1, sizeof(char));
+    strcpy(copie, chemin);
+    for (i = 1; i < taille; i++) {
+        if (copie[i] == '/') {
+            copie[i] = '\0';
+            mkdir(copie, 0777);
+            copie[i] = '/';
+        }
+    }
+    libere(copie);
+}
+
 void decompression(char *nom_archive, char *dossier_cible) {
     FILE *archive = NULL;
     int nombre_fichiers = 0,
@@ -111,7 +126,10 @@ void decompression(char *nom_archive, char *dossier_cible) {
         nom_fichier[j] = '\0';
         nom_fichier = creer_chemin_fichier(dossier_cible, nom_fichier);
         if (type == 'f') {
+            creer_dossier_parent(nom_fichier);
             decompression_fichier(archive, nom_fichier, arbre_huffman);
+        } else if (type == 'd') {
+            if (verifier_dossier(nom_fichier) != 1) mkdir(nom_fichier, 0777);
         }
         libere(nom_fichier);
     }
