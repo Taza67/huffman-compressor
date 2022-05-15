@@ -12,3 +12,22 @@ void viderBuffer() {
 void usage(char* programme) {
     fprintf(stderr, "- Usage : %s <option> [...]\n", programme);
 }
+
+int verifier_ligne_arguments(int argc, char **argv, int nombre_minimum) {
+    if (argc < 2) {
+        fprintf(stderr, "- Erreur -> fonction verifier_ligne_arguments : il manque une option !\n");
+        usage(argv[0]);
+        return 1;
+    }
+    if (argv[1][0] != '-') {
+        fprintf(stderr, "- Erreur -> fonction verifier_ligne_arguments : l'option %s doit commencer par un tiret !\n", argv[1]);
+        usage(argv[0]);
+        return 1;
+    }
+    if (argc < nombre_minimum) {
+        fprintf(stderr, "- Erreur -> fonction verifier_ligne_arguments : nombre d'arguments insuffisant !\n");
+        usage(argv[0]);
+        return 1;
+    }
+    return 0;
+}
