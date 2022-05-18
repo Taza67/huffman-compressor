@@ -8,17 +8,10 @@
 int main(int argc, char ** argv) {
     char * dossier_cible;
     file *liste_fichiers;
-    if (argc < 2) {
-        usage(argv[0]);
+    if (verifier_ligne_arguments(argc, argv, 3) == 1)
         exit(EXIT_FAILURE);
-    }
     switch (argv[1][1]) {
     case 'c':
-        if (argc < 4) {
-            fprintf(stderr, "- Erreur -> fonction main : il faut au moins un fichier à compresser !\n");
-            usage(argv[0]);
-            exit(EXIT_FAILURE);
-        }
         liste_fichiers = lister_fichiers(argc, argv);
         compression(liste_fichiers, argc - 3, argv[2]);
         break;
@@ -29,6 +22,10 @@ int main(int argc, char ** argv) {
     case 'h':
         usage(argv[0]);
         break;
+    default:
+        fprintf(stderr, "- Erreur -> fonction main : option %s inconnue !\n", argv[1]);
+        usage(argv[0]);
+        exit(EXIT_FAILURE);
     }
     exit(EXIT_SUCCESS);
 }
