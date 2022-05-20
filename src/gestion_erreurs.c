@@ -24,6 +24,11 @@ int verifier_ligne_arguments(int argc, char **argv, int nombre_minimum) {
         usage(argv[0]);
         return 1;
     }
+    if (argv[1][1] != 'c' && argv[1][1] != 'd' && argv[1][1] != 'h') {
+        fprintf(stderr, "- Erreur -> fonction verifier_ligne_arguments : option %s inconnue !\n", argv[1]);
+        usage(argv[0]);
+        return 1;
+    }
     if (argv[1][1] == 'h') return 0;
     if (argc < nombre_minimum) {
         fprintf(stderr, "- Erreur -> fonction verifier_ligne_arguments : nombre d'arguments insuffisant !\n");
