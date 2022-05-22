@@ -7,6 +7,8 @@
 #include "en_tete.h"
 #include "decompression.h"
 
+/* ******************************Version 0****************************** */
+
 void recuperer_contenu(FILE* archive, FILE* fichier, noeud* arbre_huffman[], int taille_fichier) {
     noeud * feuille_caractere = NULL;
     int codage = 0;
@@ -43,6 +45,8 @@ noeud * recuperer_feuille(noeud *racine, int paquet, int taille_paquet, int prof
     return NULL;
 }
 
+/* ******************************Version 1****************************** */
+
 void decompression_fichier(FILE *archive, char * nom_fichier, noeud* arbre_huffman[256]) {
     FILE *fichier = NULL;
     int taille_fichier = 0;
@@ -67,6 +71,8 @@ void decompression_fichier(FILE *archive, char * nom_fichier, noeud* arbre_huffm
     recuperer_contenu(archive, fichier, arbre_huffman, taille_fichier);
     fclose(fichier);
 }
+
+/* ******************************Version 2****************************** */
 
 /* crée récursivement les dossiers parents d'un chemin */
 void creer_dossier_parent(char *chemin) {
