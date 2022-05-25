@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "allocation.h"
 #include "gestion_erreurs.h"
 #include "gestion_fichiers.h"
 #include "compression.h"
@@ -14,6 +15,7 @@ int main(int argc, char ** argv) {
     case 'c':
         liste_fichiers = lister_fichiers(argc, argv);
         compression(liste_fichiers, argc - 3, argv[2]);
+        libere(liste_fichiers);
         break;
     case 'd':
         dossier_cible = (argc == 4) ? argv[3] : ".";
