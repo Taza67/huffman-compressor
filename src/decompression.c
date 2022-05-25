@@ -89,6 +89,20 @@ void creer_dossier_parent(char *chemin) {
     libere(copie);
 }
 
+char * recuperer_nom_fichier(FILE* archive) {
+    int taille_nom = 10, j = 0, caractere = 0;
+    char * nom_fichier = (char*)allocation_mem_init0(10, sizeof(char));
+    for (j = 0; (caractere = fgetc(archive)) != '\0' && caractere != EOF; j++) {
+        if (j + 1 > taille_nom) {
+            taille_nom += 10;
+            nom_fichier = (char *)reallocation_mem(nom_fichier, taille_nom, sizeof(char));
+        }
+        nom_fichier[j] = caractere;
+    }
+    nom_fichier[j] = '\0';
+    return nom_fichier;
+}
+
 void decompression(char *nom_archive, char *dossier_cible) {
     FILE *archive = NULL;
     int nombre_fichiers = 0,
@@ -116,20 +130,12 @@ void decompression(char *nom_archive, char *dossier_cible) {
         exit(EXIT_FAILURE);
     }
     for (i = 0; i < nombre_fichiers; i++) {
-        int taille_nom = 10 , j = 0;
-        char *nom_fichier = (char*)allocation_mem_init0(10, sizeof(char));
+        char *nom_fichier = NULL;
         if (((type = fgetc(archive)) != 'f' && type != 'd') || type == EOF || (sep = fgetc(archive)) != '\0') {
             fprintf(stderr, "- Erreur -> fonction decompression(char *nom_archive) : récupération du type échouée à l'indice %d !\n", i);
             exit(EXIT_FAILURE);
         }
-        for (j = 0; (caractere = fgetc(archive)) != '\0' && caractere != EOF; j++) {
-            if (j + 1 > taille_nom) {
-                taille_nom += 10;
-                nom_fichier = (char *)reallocation_mem(nom_fichier, taille_nom, sizeof(char));
-            }
-            nom_fichier[j] = caractere;
-        }
-        nom_fichier[j] = '\0';
+        nom_fichier = recuperer_nom_fichier(archive);
         nom_fichier = creer_chemin_fichier(dossier_cible, nom_fichier);
         if (type == 'f') {
             creer_dossier_parent(nom_fichier);
