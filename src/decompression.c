@@ -106,7 +106,7 @@ char * recuperer_nom_fichier(FILE* archive) {
 void decompression(char *nom_archive, char *dossier_cible) {
     FILE *archive = NULL;
     int nombre_fichiers = 0,
-        type = 0, sep = 0, caractere = 0, i = 0,
+        type = 0, sep = 0, i = 0,
         occurence[256],
         nbr_char = 0,
         taille_fichier = 0;
