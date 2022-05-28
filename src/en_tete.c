@@ -6,6 +6,8 @@
 #include "gestion_fichiers.h"
 #include "en_tete.h"
 
+/* ******************************Version 0****************************** */
+
 void ecrire_entete_aux(FILE* archive, noeud* alphabet[256]) {
     int i;
     if (archive == NULL) {
