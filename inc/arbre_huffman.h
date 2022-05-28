@@ -40,6 +40,9 @@ void creer_code(noeud* element, int code, int profondeur, noeud* alphabet[256]);
 /* Affiche le code des noeuds en binaire */
 void affichage_code(int nbr_bits, int codage);
 
+/* Affiche le code binaire de chaque caractère de l'alphabet */
+void afficher_codes(noeud* alphabet[256]);
+
 /* Calcule la profondeur de l'arbre */
 int calculer_profondeur_arbre(noeud* a);
 

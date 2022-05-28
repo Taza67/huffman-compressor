@@ -49,6 +49,7 @@ void ecrire_entete(file* liste_fichiers, FILE* archive, int nombre_fichiers, noe
     creer_tous_noeuds(arbre_huffman, tab_occurence, &nbr_char, &taille_fichier);
     creer_noeud(arbre_huffman, nbr_char);
     creer_code(*arbre_huffman, 0, 0, alphabet);
+    afficher_codes(alphabet);
     ecrire_entete_aux(archive, alphabet);  
 }
 

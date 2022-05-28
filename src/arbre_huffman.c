@@ -117,6 +117,16 @@ void affichage_code(int nbr_bits, int codage) {
     free(binaire);
 }
 
+void afficher_codes(noeud* alphabet[256]) {
+    int i = 0;
+    for (i = 0; i < 256; i++) {
+        if (alphabet[i] != NULL) {
+            printf("Caractère %c (code %d bits) : ", i, alphabet[i]->bits);
+            affichage_code(alphabet[i]->bits, alphabet[i]->code);
+        }
+    }
+}
+
 int calculer_profondeur_arbre(noeud* a) {
     int hauteur_max = 1;
     if (a == NULL) return 0;
