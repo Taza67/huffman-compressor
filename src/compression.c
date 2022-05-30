@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include "allocation.h"
 #include "en_tete.h"
 #include "compression.h"
@@ -111,6 +112,8 @@ int compter_arborescence(file * liste_fichiers, int nombre_fichiers) {
 void compression(file * liste_fichiers, int nombre_fichiers, char *nom_archive) {
     FILE *archive = NULL;
     int i = 0, total_fichiers = 0;
+    struct stat infos_archive;
+    long taille_archive = 0;
     noeud *alphabet[256];
     if ((archive = fopen(nom_archive, "wb")) == NULL) {
         fprintf(stderr, "- Erreur -> fonction compression(file * liste_fichiers, int nombre_fichiers, char * nom_archive) : ouverture de l'archive %s impossible !\n", nom_archive);
@@ -123,4 +126,8 @@ void compression(file * liste_fichiers, int nombre_fichiers, char *nom_archive) 
     for (i = 0; i < 256; i++)
         if (alphabet[i] != NULL) libere(alphabet[i]);
     fclose(archive);
+    if (stat(nom_archive, &infos_archive) == 0) {
+        taille_archive = infos_archive.st_size;
+        printf("Archive créée : %s (%ld octets)\n", nom_archive, taille_archive);
+    }
 }
