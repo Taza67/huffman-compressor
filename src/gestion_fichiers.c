@@ -33,7 +33,7 @@ char renvoyer_type(char *nom_fichier) {
 }
 
 char * creer_chemin_fichier(char *nom_dossier_parent, char *nom_fichier) {
-    int longueur_chemin = strlen(nom_dossier_parent) + strlen(nom_fichier) + 1;
+    int longueur_chemin = strlen(nom_dossier_parent) + strlen(nom_fichier) + 2;
     char *chemin = (char*)allocation_mem_init0(longueur_chemin, sizeof(char));
     strcpy(chemin, nom_dossier_parent);
     strcat(chemin, "/");
