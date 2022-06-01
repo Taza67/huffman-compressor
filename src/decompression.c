@@ -112,6 +112,8 @@ void decompression(char *nom_archive, char *dossier_cible) {
         taille_fichier = 0;
     noeud *alphabet[256],
         *arbre_huffman[256];
+    if (strcmp(dossier_cible, ".") != 0 && verifier_dossier(dossier_cible) != 1)
+        mkdir(dossier_cible, 0777);
     for (i = 0; i < 256; i++) {
         occurence[i] = 0;
         alphabet[i] = NULL;
