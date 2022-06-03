@@ -93,7 +93,7 @@ char * recuperer_nom_fichier(FILE* archive) {
     int taille_nom = 10, j = 0, caractere = 0;
     char * nom_fichier = (char*)allocation_mem_init0(10, sizeof(char));
     for (j = 0; (caractere = fgetc(archive)) != '\0' && caractere != EOF; j++) {
-        if (j + 1 > taille_nom) {
+        if (j + 1 >= taille_nom) {
             taille_nom += 10;
             nom_fichier = (char *)reallocation_mem(nom_fichier, taille_nom, sizeof(char));
         }
