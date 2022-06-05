@@ -132,13 +132,14 @@ void decompression(char *nom_archive, char *dossier_cible) {
         exit(EXIT_FAILURE);
     }
     for (i = 0; i < nombre_fichiers; i++) {
-        char *nom_fichier = NULL;
+        char *nom_fichier = NULL, *nom_origine = NULL;
         if (((type = fgetc(archive)) != 'f' && type != 'd') || type == EOF || (sep = fgetc(archive)) != '\0') {
             fprintf(stderr, "- Erreur -> fonction decompression(char *nom_archive) : récupération du type échouée à l'indice %d !\n", i);
             exit(EXIT_FAILURE);
         }
-        nom_fichier = recuperer_nom_fichier(archive);
-        nom_fichier = creer_chemin_fichier(dossier_cible, nom_fichier);
+        nom_origine = recuperer_nom_fichier(archive);
+        nom_fichier = creer_chemin_fichier(dossier_cible, nom_origine);
+        libere(nom_origine);
         if (type == 'f') {
             creer_dossier_parent(nom_fichier);
             decompression_fichier(archive, nom_fichier, arbre_huffman);
