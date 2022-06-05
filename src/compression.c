@@ -128,6 +128,6 @@ void compression(file * liste_fichiers, int nombre_fichiers, char *nom_archive) 
     fclose(archive);
     if (stat(nom_archive, &infos_archive) == 0) {
         taille_archive = infos_archive.st_size;
-        printf("Archive créée : %s (%ld octets)\n", nom_archive, taille_archive);
+        printf("Archive créée : %s (%ld octets, %d entrées)\n", nom_archive, taille_archive, total_fichiers);
     }
 }
