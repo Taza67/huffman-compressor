@@ -151,4 +151,5 @@ void decompression(char *nom_archive, char *dossier_cible) {
     for (i = 0; i < 256; i++)
         if (alphabet[i] != NULL) libere(alphabet[i]);
     fclose(archive);
+    printf("Décompression terminée : %d entrées restaurées dans %s\n", nombre_fichiers, dossier_cible);
 }
