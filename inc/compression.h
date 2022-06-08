@@ -16,6 +16,9 @@ void compression_arborescence(FILE *archive, noeud* alphabet[256], file * liste_
 /* compte le nombre total d'entrées de l'arborescence */
 int compter_arborescence(file * liste_fichiers, int nombre_fichiers);
 
+/* liste les sous-fichiers d'un dossier et les préfixe du chemin du dossier */
+file * lister_sous_fichiers(char * nom_dossier, int * nombre_sous_fichiers);
+
 /* compresse une liste de fichiers dans une archive */
 void compression(file * liste_fichiers, int nombre_fichiers, char *nom_archive);
 

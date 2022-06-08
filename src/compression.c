@@ -59,9 +59,23 @@ void compression_fichier(FILE *archive, file struct_fichier, noeud *alphabet[256
 
 /* ******************************Version 2****************************** */
 
+/* liste les sous-fichiers d'un dossier et les préfixe du chemin du dossier */
+file * lister_sous_fichiers(char * nom_dossier, int * nombre_sous_fichiers) {
+    int i = 0;
+    file * sous_fichiers = NULL;
+    *nombre_sous_fichiers = renvoyer_nombre_fichiers_dossier(nom_dossier);
+    sous_fichiers = lister_fichiers_dossier(nom_dossier);
+    for (i = 0; i < *nombre_sous_fichiers; i++) {
+        char * ancien_nom = sous_fichiers[i].nom;
+        sous_fichiers[i].nom = creer_chemin_fichier(nom_dossier, ancien_nom);
+        libere(ancien_nom);
+    }
+    return sous_fichiers;
+}
+
 /* compresse une liste de fichiers dans une archive */
 void compression_arborescence(FILE *archive, noeud* alphabet[256], file * liste_fichiers, int nombre_fichiers) {
-    int i = 0, j = 0;
+    int i = 0;
     for (i = 0; i < nombre_fichiers; i++) {
         fputc(liste_fichiers[i].type, archive);
         fputc('\0', archive);
@@ -73,13 +87,8 @@ void compression_arborescence(FILE *archive, noeud* alphabet[256], file * liste_
             fputc('\0', archive);
             compression_fichier(archive, liste_fichiers[i], alphabet);
         } else if (liste_fichiers[i].type == 'd') {
-            int nombre_sous_fichiers = renvoyer_nombre_fichiers_dossier(liste_fichiers[i].nom);
-            file * sous_fichiers = lister_fichiers_dossier(liste_fichiers[i].nom);
-            for (j = 0; j < nombre_sous_fichiers; j++) {
-                char * ancien_nom = sous_fichiers[j].nom;
-                sous_fichiers[j].nom = creer_chemin_fichier(liste_fichiers[i].nom, ancien_nom);
-                libere(ancien_nom);
-            }
+            int nombre_sous_fichiers = 0, j = 0;
+            file * sous_fichiers = lister_sous_fichiers(liste_fichiers[i].nom, &nombre_sous_fichiers);
             compression_arborescence(archive, alphabet, sous_fichiers, nombre_sous_fichiers);
             for (j = 0; j < nombre_sous_fichiers; j++) libere(sous_fichiers[j].nom);
             libere(sous_fichiers);
@@ -89,17 +98,12 @@ void compression_arborescence(FILE *archive, noeud* alphabet[256], file * liste_
 
 /* compte le nombre total d'entrées (fichiers et dossiers) de l'arborescence */
 int compter_arborescence(file * liste_fichiers, int nombre_fichiers) {
-    int total = 0, i = 0, j = 0;
+    int total = 0, i = 0;
     for (i = 0; i < nombre_fichiers; i++) {
         total++;
         if (liste_fichiers[i].type == 'd') {
-            int nombre_sous_fichiers = renvoyer_nombre_fichiers_dossier(liste_fichiers[i].nom);
-            file * sous_fichiers = lister_fichiers_dossier(liste_fichiers[i].nom);
-            for (j = 0; j < nombre_sous_fichiers; j++) {
-                char * ancien_nom = sous_fichiers[j].nom;
-                sous_fichiers[j].nom = creer_chemin_fichier(liste_fichiers[i].nom, ancien_nom);
-                libere(ancien_nom);
-            }
+            int nombre_sous_fichiers = 0, j = 0;
+            file * sous_fichiers = lister_sous_fichiers(liste_fichiers[i].nom, &nombre_sous_fichiers);
             total += compter_arborescence(sous_fichiers, nombre_sous_fichiers);
             for (j = 0; j < nombre_sous_fichiers; j++) libere(sous_fichiers[j].nom);
             libere(sous_fichiers);
