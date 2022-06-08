@@ -120,7 +120,7 @@ void affichage_code(int nbr_bits, int codage) {
 void afficher_codes(noeud* alphabet[256]) {
     int i = 0;
     for (i = 0; i < 256; i++) {
-        if (alphabet[i] != NULL) {
+        if (alphabet[i] != NULL && (i >= 32 && i < 127)) {
             printf("Caractère %c (code %d bits) : ", i, alphabet[i]->bits);
             affichage_code(alphabet[i]->bits, alphabet[i]->code);
         }
