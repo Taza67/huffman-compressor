@@ -10,7 +10,11 @@ void viderBuffer() {
 }
 
 void usage(char* programme) {
-    fprintf(stderr, "- Usage : %s <option> [...]\n", programme);
+    fprintf(stderr, "- Usage : %s <option> [arguments]\n", programme);
+    fprintf(stderr, "  Options :\n");
+    fprintf(stderr, "    -c <archive> <fichier|dossier> [...]  compresser un ou plusieurs fichiers\n");
+    fprintf(stderr, "    -d <archive> [dossier_cible]          décompresser une archive\n");
+    fprintf(stderr, "    -h                                    afficher cette aide\n");
 }
 
 int verifier_ligne_arguments(int argc, char **argv, int nombre_minimum) {
