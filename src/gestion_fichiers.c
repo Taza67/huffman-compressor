@@ -62,7 +62,7 @@ file * lister_fichiers(int taille_ligne, char ** ligne_arguments)  {
     file * liste_fichiers = (file*)allocation_mem_init0(taille_liste_fichiers, sizeof(file));
     for (i = 3; i < taille_ligne; i++) {
         char type = 0;
-        liste_fichiers[i - 3].nom = (char*)allocation_mem_init0(strlen(ligne_arguments[i]), sizeof(char));
+        liste_fichiers[i - 3].nom = (char*)allocation_mem_init0(strlen(ligne_arguments[i]) + 1, sizeof(char));
         strcpy(liste_fichiers[i - 3].nom, ligne_arguments[i]);
         type = renvoyer_type(liste_fichiers[i - 3].nom);
         if (type != 'f' && type != 'd') {
