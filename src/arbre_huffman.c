@@ -105,6 +105,16 @@ void creer_code(noeud* element, int code, int profondeur, noeud* alphabet[256]) 
     }
 }
 
+void construire_arbre(int occurence[256], noeud* alphabet[256]) {
+    int nbr_char = 0, taille_fichier = 0;
+    noeud* arbre_huffman[256];
+    int i = 0;
+    for (i = 0; i < 256; i++) arbre_huffman[i] = NULL;
+    creer_tous_noeuds(arbre_huffman, occurence, &nbr_char, &taille_fichier);
+    creer_noeud(arbre_huffman, nbr_char);
+    creer_code(*arbre_huffman, 0, 0, alphabet);
+}
+
 void affichage_code(int nbr_bits, int codage) {
     int * binaire = (int*)allocation_mem_init0(nbr_bits, sizeof(int));
     int i, *p;

@@ -36,19 +36,13 @@ void recuperer_entete(FILE* archive, int occurence[256]) {
 
 void ecrire_entete(file* liste_fichiers, FILE* archive, int nombre_fichiers, noeud* alphabet[256]) {
     int tab_occurence[256],
-        nbr_char = 0,
-        taille_fichier = 0,
         i = 0;
-    noeud* arbre_huffman[256];
     for(i = 0;i < 256; i++) {
         alphabet[i] = NULL;
         tab_occurence[i] = 0;
-        arbre_huffman[i] = NULL;
     }
     calculer_occurences_totales(liste_fichiers, nombre_fichiers, tab_occurence);
-    creer_tous_noeuds(arbre_huffman, tab_occurence, &nbr_char, &taille_fichier);
-    creer_noeud(arbre_huffman, nbr_char);
-    creer_code(*arbre_huffman, 0, 0, alphabet);
+    construire_arbre(tab_occurence, alphabet);
     afficher_codes(alphabet);
     ecrire_entete_aux(archive, alphabet);  
 }

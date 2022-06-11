@@ -107,26 +107,20 @@ void decompression(char *nom_archive, char *dossier_cible) {
     FILE *archive = NULL;
     int nombre_fichiers = 0,
         type = 0, sep = 0, i = 0,
-        occurence[256],
-        nbr_char = 0,
-        taille_fichier = 0;
-    noeud *alphabet[256],
-        *arbre_huffman[256];
+        occurence[256];
+    noeud *alphabet[256];
     if (strcmp(dossier_cible, ".") != 0 && verifier_dossier(dossier_cible) != 1)
         mkdir(dossier_cible, 0777);
     for (i = 0; i < 256; i++) {
         occurence[i] = 0;
         alphabet[i] = NULL;
-        arbre_huffman[i] = NULL;
     }
     if ((archive = fopen(nom_archive, "rb")) == NULL) {
         fprintf(stderr, "- Erreur -> fonction decompression(char *nom_archive) : ouverture de l'archive %s impossible !\n", nom_archive);
         exit(EXIT_FAILURE);
     }
     recuperer_entete(archive, occurence);
-    creer_tous_noeuds(arbre_huffman, occurence, &nbr_char, &taille_fichier);
-    creer_noeud(arbre_huffman, nbr_char);
-    creer_code(*arbre_huffman, 0, 0, alphabet);
+    construire_arbre(occurence, alphabet);
     if (fread(&(nombre_fichiers), sizeof(int), 1, archive) != 1) {
         fprintf(stderr, "- Erreur -> fonction decompression(char *nom_archive) : récupération du nombre de fichiers échouée !\n");
         exit(EXIT_FAILURE);
