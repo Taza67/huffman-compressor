@@ -144,8 +144,7 @@ void decompression(char *nom_archive, char *dossier_cible) {
         }
         libere(nom_fichier);
     }
-    for (i = 0; i < 256; i++)
-        if (alphabet[i] != NULL) libere(alphabet[i]);
+    libere_arbre(arbre_huffman[0]);
     fclose(archive);
     printf("Décompression terminée : %d entrées restaurées dans %s\n", nombre_fichiers, dossier_cible);
 }

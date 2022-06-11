@@ -39,6 +39,9 @@ void creer_code(noeud* element, int code, int profondeur, noeud* alphabet[256]);
    et renvoie la racine de l'arbre */
 noeud * construire_arbre(int occurence[256], noeud* alphabet[256]);
 
+/* Libère récursivement les noeuds de l'arbre de huffman */
+void libere_arbre(noeud * racine);
+
 /* ********************Affichage************************** */
 
 /* Affiche le code des noeuds en binaire */

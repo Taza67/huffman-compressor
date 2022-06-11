@@ -116,6 +116,13 @@ noeud * construire_arbre(int occurence[256], noeud* alphabet[256]) {
     return *arbre_huffman;
 }
 
+void libere_arbre(noeud * racine) {
+    if (racine == NULL) return;
+    libere_arbre(racine->gauche);
+    libere_arbre(racine->droit);
+    libere(racine);
+}
+
 void affichage_code(int nbr_bits, int codage) {
     int * binaire = (int*)allocation_mem_init0(nbr_bits, sizeof(int));
     int i, *p;
