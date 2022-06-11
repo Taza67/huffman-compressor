@@ -35,8 +35,9 @@ void creer_noeud(noeud * arbre_huffman[], int taille);
 /* Crée les codes binaires des feuilles de l'arbre */
 void creer_code(noeud* element, int code, int profondeur, noeud* alphabet[256]);
 
-/* Construit l'arbre de huffman puis les codes de chaque caractère */
-void construire_arbre(int occurence[256], noeud* alphabet[256]);
+/* Construit l'arbre de huffman puis les codes de chaque caractère,
+   et renvoie la racine de l'arbre */
+noeud * construire_arbre(int occurence[256], noeud* alphabet[256]);
 
 /* ********************Affichage************************** */
 

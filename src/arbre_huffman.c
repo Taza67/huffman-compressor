@@ -105,7 +105,7 @@ void creer_code(noeud* element, int code, int profondeur, noeud* alphabet[256]) 
     }
 }
 
-void construire_arbre(int occurence[256], noeud* alphabet[256]) {
+noeud * construire_arbre(int occurence[256], noeud* alphabet[256]) {
     int nbr_char = 0, taille_fichier = 0;
     noeud* arbre_huffman[256];
     int i = 0;
@@ -113,6 +113,7 @@ void construire_arbre(int occurence[256], noeud* alphabet[256]) {
     creer_tous_noeuds(arbre_huffman, occurence, &nbr_char, &taille_fichier);
     creer_noeud(arbre_huffman, nbr_char);
     creer_code(*arbre_huffman, 0, 0, alphabet);
+    return *arbre_huffman;
 }
 
 void affichage_code(int nbr_bits, int codage) {
